@@ -51,4 +51,9 @@ end
     end
 end
 
+@testset "@.>> macro" begin
+    strarray = [rand('A':'Z', 5) |> join for i ∈ 1:10]
+    @test (strarray .== @.>> strarray (1, λ()) (1, getindex(1))) |> all
+end
+
 end
