@@ -4,9 +4,9 @@
 Enhances [`|>`](@ref) operation, and allows more flexible function chaining.
 
 !!! note
-    `|>` operations inside the `@>` macro are _almost_ compatible with the
-    original [`|>`](@ref) operations, except that chaining arguments by wrapping
-    in an anonymous function like `val |> x -> f(x)` **should be avoided**.
+    `@>` macro is _almost_ compatible with the original [`|>`](@ref) operation,
+    except that chaining arguments by wrapping in an anonymous function like
+    `val |> x -> f(x)` **should be avoided**.
 
 See also: [`|>`](@ref), [`@>>`](@ref)
 
@@ -24,6 +24,9 @@ julia> @> "chanined" |> λ
 # given function call, injects chained value into the first argument
 julia> @> "chained" |> λ()
 ("chained", "default", "default")
+
+julia> @> "chained" |> λ("passed")
+("chained", "passed", "default")
 
 # with tuple, the argument position can be specified
 julia> @> "chained" |> (1, λ())

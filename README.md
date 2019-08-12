@@ -24,6 +24,9 @@ julia> @> "chanined" |> λ
 julia> @> "chained" |> λ()
 ("chained", "default", "default")
 
+julia> @> "chained" |> λ("passed")
+("chained", "passed", "default")
+
 # with tuple, the argument position can be specified
 julia> @> "chained" |> (1, λ())
 ("chained", "default", "default")
