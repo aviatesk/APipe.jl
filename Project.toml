@@ -2,7 +2,7 @@ name = "APipe"
 uuid = "9a685650-ba06-11e9-13eb-e91c5df15e1f"
 keywords = ["pipe", "function", "chaining", "macro"]
 license = "MIT"
-desc = "Abuse and Addict |> operators"
+desc = "Overdose on |> operators"
 authors = ["aviatesk <aviatesk@gmail.com>"]
 version = "0.1.0"
 
