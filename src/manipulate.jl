@@ -8,15 +8,24 @@ function processexpr!(expr::Expr)
         # process inside `|>` operators first
         processexpr!(args[2])
 
-        if args[3] isa Expr && args[3].head === :tuple
-            tpl = args[3].args
-            chainarg, fcall = tpl
-
-            # manipulate chanined expression
-            args[3] = makechainfunc(fcall, chainarg)
+        if args[3] isa Expr
+            if args[3].head === :call
+                # inject into the first argument
+                args[3] = makechainfunc(args[3], 1)
+            elseif args[3].head === :tuple
+                chainarg, fcall = args[3].args
+                args[3] = makechainfunc(fcall, chainarg)
+            end
         end
     end
 end
+
+@doc """
+    makechainfunc
+
+manipulate chanining expression
+"""
+function makechainfunc end
 
 function makechainfunc(fcall::Symbol, chainarg::Int)
     f = fcall
