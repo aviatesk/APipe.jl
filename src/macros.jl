@@ -83,7 +83,7 @@ end
     @.>> exprs...
 
 Works almost same as [`@>>`](@ref) except that implicit [`|>`](@ref) is all
-[dot fused](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1).
+[dot-fused](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1).
 
 See also: [`|>`](@ref), [`@>`](@ref), [`@>>`](@ref)
 

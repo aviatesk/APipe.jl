@@ -24,6 +24,19 @@ julia> @> "chained" |> (2, λ("passsed"))
 
 julia> @> "chanined" |> (:keyword, λ("passed"))
 ("passed", "default", "chained")
+
+julia> @> 1:100 .|> string .|> (2, λ("passed"))
+100-element Array{Tuple{String,String,String},1}:
+ ("passed", "1", "default")
+ ("passed", "2", "default")
+ ("passed", "3", "default")
+ ("passed", "4", "default")
+ ("passed", "5", "default")
+ ⋮
+ ("passed", "97", "default")
+ ("passed", "98", "default")
+ ("passed", "99", "default")
+ ("passed", "100", "default")
 ```
 
 With `@>>` macro, you no longer need even `|>` operators themselves.
@@ -47,10 +60,32 @@ julia> @>> "chanined" (:keyword, λ("passed"))
 ("passed", "default", "chained")
 ```
 
+Within `@.>>` macro, all the implicit `|>` operations are [dot-fused](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1).
+
+```julia
+julia> function λ(arg, default = "default"; keyword = "default")
+           arg, default, keyword
+       end
+λ (generic function with 2 methods)
+
+julia> @.>> 1:100 string (2, λ("passed"))
+100-element Array{Tuple{String,String,String},1}:
+ ("passed", "1", "default")
+ ("passed", "2", "default")
+ ("passed", "3", "default")
+ ("passed", "4", "default")
+ ("passed", "5", "default")
+ ⋮
+ ("passed", "97", "default")
+ ("passed", "98", "default")
+ ("passed", "99", "default")
+ ("passed", "100", "default")
+```
+
 
 ## Random TODOs
 
-- [ ] Support `.|>` fusing
+- [x] Support `.|>` fusing
 
 ## License
 
