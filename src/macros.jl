@@ -4,8 +4,9 @@
 Enhances [`|>`](@ref) operation, and allows more flexible function chaining.
 
 !!! note
-    `|>` operations inside the `@>` macro are fully compatible with the original
-    [`|>`](@ref) operations.
+    `|>` operations inside the `@>` macro are _almost_ compatible with the original
+    [`|>`](@ref) operations except that chaining arguments by wrapping in
+    anonymous function like `val |> x -> f(x)` should be avoided.
 
 See also: [`|>`](@ref), [`@>>`](@ref)
 
