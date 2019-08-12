@@ -1,11 +1,11 @@
 # APipe.jl
 
-Lets you Abuse `|>` and will lead you to overdose `|>`.
+Lets you abuse `|>` and may make you `|>` addict.
 
 
 ## Example
 
-With `@>` macro, you no longer need to write boring `val |> x -> func(val, x)`.
+With `@>` macro, you no longer need to write the boring `val |> x -> func(val, x)`.
 
 ```julia
 julia> function λ(arg, default = "default"; keyword = "default")
@@ -26,7 +26,7 @@ julia> @> "chanined" |> (:keyword, λ("passed"))
 ("passed", "default", "chained")
 ```
 
-With `@>>` macro, you even no longer need `|>` operators.
+With `@>>` macro, you no longer need even `|>` operators themselves.
 
 ```julia
 julia> function λ(arg, default = "default"; keyword = "default")

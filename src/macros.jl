@@ -1,10 +1,11 @@
 @doc """
     @> expr
 
-Enhances [|>](@ref) operation, and allows more flexible function chaining.
+Enhances [`|>`](@ref) operation, and allows more flexible function chaining.
 
 !!! note
-    This macro is _completely_ compatible with the original [|>](@ref) operation.
+    This macro is _almost_ compatible with the original [`|>`](@ref) operation, except
+    [dot fusing](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1).
 
 # Example
 ```julia
@@ -25,6 +26,8 @@ julia> @> "chained" |> (2, λ("passsed"))
 julia> @> "chanined" |> (:keyword, λ("passed"))
 ("passed", "default", "chained")
 ```
+
+See also: [`|>`](@ref), [`@>>`](@ref)
 """
 macro >(expr)
     processexpr!(expr)
@@ -34,7 +37,7 @@ end
 @doc """
     @>> exprs...
 
-Allows [@>](@ref) chaining even without [|>](@ref) operators.
+Allows [`@>`](@ref) chaining even without [`|>`](@ref) operators.
 
 # Example
 ```julia
@@ -55,6 +58,8 @@ julia> @>> "chained" (2, λ("passsed"))
 julia> @>> "chanined" (:keyword, λ("passed"))
 ("passed", "default", "chained")
 ```
+
+See also: [`|>`](@ref), [`@>`](@ref)
 """
 macro >>(exprs...)
     expr = concatexpr(exprs...)
