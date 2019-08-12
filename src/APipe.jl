@@ -33,6 +33,6 @@ macro >(expr)
 end
 
 
-include("pipe.jl")
+include("manipulate.jl")
 
 end  # module
