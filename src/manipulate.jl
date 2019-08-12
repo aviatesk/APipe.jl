@@ -12,11 +12,6 @@ function processexpr!(expr::Expr)
             tpl = args[3].args
             pipearg, fcall = tpl
 
-            # verbose ?
-            @assert length(tpl) === 2 &&
-                    (pipearg isa Int || (pipearg isa QuoteNode && pipearg.value isa Symbol)) &&
-                    (fcall isa Symbol || (fcall isa Expr && fcall.head === :call))
-
             # manipulate chanined expression
             args[3] = makechainfunc(fcall, pipearg)
         end
