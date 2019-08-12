@@ -1,6 +1,6 @@
 module APipe
 
-export @>, @>>
+export @>, @>>, @.>>
 
 include("manipulate.jl")
 include("macros.jl")

@@ -4,7 +4,7 @@ function processexpr!(expr::Expr)
     head = expr.head
     args = expr.args
 
-    if head === :call && args[1] === :|>
+    if head === :call && (args[1] === :|> || args[1] === :.|>)
         # process inside `|>` operators first
         processexpr!(args[2])
 
@@ -59,15 +59,19 @@ function haskeywordarg(fcall)
 end
 
 # @TODO: absolutely better to manipulate ASTs directly rather than parsing from string
-function concatexpr(exprs)
+function concatexpr(exprs, dotfuse = false)
     concated = ["@>"]
     push!(concated, stringify(exprs[1]))
     for expr ∈ exprs[2:end]
-        push!(concated, "|>")
+        if dotfuse
+            push!(concated, ".|>")
+        else
+            push!(concated, "|>")
+        end
         push!(concated, stringify(expr))
     end
 
-    concated |> join |> Meta.parse
+    join(concated, " ") |> Meta.parse
 end
 
 stringify(expr) = string(expr)
