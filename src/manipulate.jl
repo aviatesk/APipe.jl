@@ -59,7 +59,7 @@ function haskeywordarg(fcall)
 end
 
 # @TODO: absolutely better to manipulate ASTs directly rather than parsing from string
-function concatexpr(exprs...)
+function concatexpr(exprs)
     concated = ["@>"]
     push!(concated, stringify(exprs[1]))
     for expr ∈ exprs[2:end]

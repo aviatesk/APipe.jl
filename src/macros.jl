@@ -62,6 +62,6 @@ julia> @>> "chanined" (:keyword, λ("passed"))
 See also: [`|>`](@ref), [`@>`](@ref)
 """
 macro >>(exprs...)
-    expr = concatexpr(exprs...)
+    expr = concatexpr(exprs)
     :($(esc(expr)))
 end
