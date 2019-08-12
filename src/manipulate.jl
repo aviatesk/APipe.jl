@@ -57,3 +57,16 @@ function haskeywordarg(fcall)
     end
     return false
 end
+
+# @TODO: absolutely better to manipulate ASTs directly rather than parsing from string
+Base.string(a::String) = "\"$(a)\""
+function concatexpr(exprs...)
+    concated = ["@>"]
+    push!(concated, Base.string(exprs[1]))
+    for expr ∈ exprs[2:end]
+        push!(concated, "|>")
+        push!(concated, Base.string(expr))
+    end
+
+    concated |> join |> Meta.parse
+end
