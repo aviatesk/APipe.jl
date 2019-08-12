@@ -29,7 +29,7 @@ end
 
 function makechainfunc(fcall::Symbol, pipearg::Int)
     # the other arguments are not specified and thus `pipearg` should be `1`
-    @assert pipearg === 1
+    @assert pipearg === 1 "the first argument is not specified"
     :(piped -> $fcall(piped))
 end
 
