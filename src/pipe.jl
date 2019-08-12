@@ -24,14 +24,36 @@ function processexpr!(expr::Expr)
 end
 
 function makechainfunc(fcall::Symbol, pipearg::Int)
-    # the other arguments are not specified and thus `pipearg` should be `1`
-    @assert pipearg === 1 "the first argument is not specified"
-    :(piped -> $fcall(piped))
+    f = fcall
+    :(piped -> $f(piped))
 end
 
 function makechainfunc(fcall::Symbol, pipearg::QuoteNode)
-    :(piped -> $fcall(; $(pipearg.value) = piped))
+    f = fcall
+    :(piped -> $f(; $(pipearg.value) = piped))
 end
 
-function makechainfunc(fcall::Expr, pipearg::Int) end
-function makechainfunc(fcall::Expr, pipearg::Symbol) end
+function makechainfunc(fcall::Expr, pipearg::Int)
+    offset = haskeywordarg(fcall) ? 2 : 1
+    insert!(fcall.args, pipearg + offset, :piped)
+
+    :(piped -> $fcall)
+end
+
+function makechainfunc(fcall::Expr, pipearg::QuoteNode)
+    keyarg = Expr(:kw, pipearg.value, :piped)
+    if haskeywordarg(fcall)
+        push!(fcall.args[2].args, keyarg)
+    else
+        insert!(fcall.args, 2, Expr(:parameters, keyarg))
+    end
+
+    :(piped -> $fcall)
+end
+
+function haskeywordarg(fcall)
+    for arg ∈ fcall.args
+        arg isa Expr && arg.head === :parameters && return true
+    end
+    return false
+end
