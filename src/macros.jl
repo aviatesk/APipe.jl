@@ -44,7 +44,7 @@ julia> @> 1:100 .|> string .|> (2, λ("passed"))
 """
 macro >(expr)
     processexpr!(expr)
-    :($(esc(expr)))
+    :( $(esc(expr)) )
 end
 
 @doc """
@@ -76,7 +76,7 @@ julia> @>> "chanined" (:keyword, λ("passed"))
 """
 macro >>(exprs...)
     expr = concatexpr(exprs)
-    :($(esc(expr)))
+    :( $(esc(expr)) )
 end
 
 @doc """
@@ -110,5 +110,5 @@ julia> @.>> 1:100 string (2, λ("passed"))
 """
 macro .>>(exprs...)
     expr = concatexpr(exprs, true)
-    :($(esc(expr)))
+    :( $(esc(expr)) )
 end

@@ -25,19 +25,19 @@ end
 
 function makechainfunc(fcall::Symbol, pipearg::Int)
     f = fcall
-    :(piped -> $f(piped))
+    :( piped -> $f(piped) )
 end
 
 function makechainfunc(fcall::Symbol, pipearg::QuoteNode)
     f = fcall
-    :(piped -> $f(; $(pipearg.value) = piped))
+    :( piped -> $f(; $(pipearg.value) = piped) )
 end
 
 function makechainfunc(fcall::Expr, pipearg::Int)
     offset = haskeywordarg(fcall) ? 2 : 1
     insert!(fcall.args, pipearg + offset, :piped)
 
-    :(piped -> $fcall)
+    :( piped -> $fcall )
 end
 
 function makechainfunc(fcall::Expr, pipearg::QuoteNode)
@@ -48,7 +48,7 @@ function makechainfunc(fcall::Expr, pipearg::QuoteNode)
         insert!(fcall.args, 2, Expr(:parameters, keyarg))
     end
 
-    :(piped -> $fcall)
+    :( piped -> $fcall )
 end
 
 function haskeywordarg(fcall)
