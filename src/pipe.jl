@@ -18,11 +18,7 @@ function processexpr!(expr::Expr)
                     (fcall isa Symbol || (fcall isa Expr && fcall.head === :call))
 
             # manipulate chanined expression
-            args[3] = if fcall isa Symbol
-                makechainfunc(fcall, pipearg)
-            else # `fcall` isa `Expr`
-                makechainfunc(fcall, pipearg)
-            end
+            args[3] = makechainfunc(fcall, pipearg)
         end
     end
 end
