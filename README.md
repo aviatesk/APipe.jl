@@ -1,6 +1,7 @@
 # APipe.jl
 
 [![Build Status](https://travis-ci.org/aviatesk/APipe.jl.svg?branch=master)](https://travis-ci.org/aviatesk/APipe.jl)
+[![codecov](https://codecov.io/gh/aviatesk/APipe.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/aviatesk/APipe.jl)
 
 Lets you abuse `|>` and may make you `|>` addict.
 
