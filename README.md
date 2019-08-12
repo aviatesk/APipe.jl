@@ -16,30 +16,38 @@ julia> function λ(arg, default = "default"; keyword = "default")
        end
 λ (generic function with 2 methods)
 
+# usual function chaining operation
 julia> @> "chanined" |> λ
 ("chanined", "default", "default")
 
+# given function call, injects chained value into the first argument
+julia> @> "chained" |> λ()
+("chained", "default", "default")
+
+# with tuple, the argument position can be specified
 julia> @> "chained" |> (1, λ())
 ("chained", "default", "default")
 
 julia> @> "chained" |> (2, λ("passsed"))
 ("passed", "chained", "default")
 
+# keyword argument should be specified with symbol
 julia> @> "chanined" |> (:keyword, λ("passed"))
 ("passed", "default", "chained")
 
-julia> @> 1:100 .|> string .|> (2, λ("passed"))
+# dot-fusing is fully supported
+julia> @> 1:100 .|> string .|> λ("passed")
 100-element Array{Tuple{String,String,String},1}:
- ("passed", "1", "default")
- ("passed", "2", "default")
- ("passed", "3", "default")
- ("passed", "4", "default")
- ("passed", "5", "default")
+ ("1", "passed", "default")
+ ("2", "passed", "default")
+ ("3", "passed", "default")
+ ("4", "passed", "default")
+ ("5", "passed", "default")
  ⋮
- ("passed", "97", "default")
- ("passed", "98", "default")
- ("passed", "99", "default")
- ("passed", "100", "default")
+ ("97", "passed", "default")
+ ("98", "passed", "default")
+ ("99", "passed", "default")
+ ("100", "passed", "default")
 ```
 
 With `@>>` macro, you no longer need even `|>` operators themselves.
@@ -50,10 +58,7 @@ julia> function λ(arg, default = "default"; keyword = "default")
        end
 λ (generic function with 2 methods)
 
-julia> @>> "chanined" λ
-("chanined", "default", "default")
-
-julia> @>> "chained" (1, λ())
+julia> @>> "chained" λ()
 ("chained", "default", "default")
 
 julia> @>> "chained" (2, λ("passsed"))
