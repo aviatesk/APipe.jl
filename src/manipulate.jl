@@ -10,40 +10,40 @@ function processexpr!(expr::Expr)
 
         if args[3] isa Expr && args[3].head === :tuple
             tpl = args[3].args
-            pipearg, fcall = tpl
+            chainarg, fcall = tpl
 
             # manipulate chanined expression
-            args[3] = makechainfunc(fcall, pipearg)
+            args[3] = makechainfunc(fcall, chainarg)
         end
     end
 end
 
-function makechainfunc(fcall::Symbol, pipearg::Int)
+function makechainfunc(fcall::Symbol, chainarg::Int)
     f = fcall
-    :( piped -> $f(piped) )
+    :( chained -> $f(chained) )
 end
 
-function makechainfunc(fcall::Symbol, pipearg::QuoteNode)
+function makechainfunc(fcall::Symbol, chainarg::QuoteNode)
     f = fcall
-    :( piped -> $f(; $(pipearg.value) = piped) )
+    :( chained -> $f(; $(chainarg.value) = chained) )
 end
 
-function makechainfunc(fcall::Expr, pipearg::Int)
+function makechainfunc(fcall::Expr, chainarg::Int)
     offset = haskeywordarg(fcall) ? 2 : 1
-    insert!(fcall.args, pipearg + offset, :piped)
+    insert!(fcall.args, chainarg + offset, :chained)
 
-    :( piped -> $fcall )
+    :( chained -> $fcall )
 end
 
-function makechainfunc(fcall::Expr, pipearg::QuoteNode)
-    keyarg = Expr(:kw, pipearg.value, :piped)
+function makechainfunc(fcall::Expr, chainarg::QuoteNode)
+    keyarg = Expr(:kw, chainarg.value, :chained)
     if haskeywordarg(fcall)
         push!(fcall.args[2].args, keyarg)
     else
         insert!(fcall.args, 2, Expr(:parameters, keyarg))
     end
 
-    :( piped -> $fcall )
+    :( chained -> $fcall )
 end
 
 function haskeywordarg(fcall)
