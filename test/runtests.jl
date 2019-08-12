@@ -25,14 +25,16 @@ end
 
     @testset "applied to function call" begin
         @test ("chained", "default", "default") == @> "chained" |> (1, λ)
+        @test ("chained", "default", "default") == @> "chained" |> λ()
         @test ("chained", "default", "default") == @> "chained" |> (1, λ())
+        @test ("chained", "passed", "default") == @> "chained" |> λ("passed")
         @test ("passed", "chained", "default") == @> "chained" |> (2, λ("passed"))
         @test ("passed", "default", "chained") == @> "chained" |> (:keyword, λ("passed"))
     end
 
     @testset "applied with dot fuse" begin
         strarray = [rand('A':'Z', 5) |> join for i ∈ 1:10]
-        @test (strarray .== @> strarray .|> (1, λ()) .|> (1, getindex(1))) |> all
+        @test (strarray .== @> strarray .|> λ() .|> getindex(1)) |> all
     end
 end
 
@@ -45,7 +47,7 @@ end
 
     @testset "@> chanining" begin
         @test ("chained", "default", "default") == @>> "chained" (1, λ)
-        @test ("chained", "default", "default") == @>> "chained" (1, λ())
+        @test ("chained", "default", "default") == @>> "chained" λ()
         @test ("passed", "chained", "default") == @>> "chained" (2, λ("passed"))
         @test ("passed", "default", "chained") == @>> "chained" (:keyword, λ("passed"))
     end
@@ -53,7 +55,7 @@ end
 
 @testset "@.>> macro" begin
     strarray = [rand('A':'Z', 5) |> join for i ∈ 1:10]
-    @test (strarray .== @.>> strarray (1, λ()) (1, getindex(1))) |> all
+    @test (strarray .== @.>> strarray λ() getindex(1)) |> all
 end
 
 end
