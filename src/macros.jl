@@ -18,7 +18,7 @@ See also: [`|>`](@ref), [`@>>`](@ref)
 julia> λ(val) == val |> λ == @> val |> λ
 ```
 
-- given function call, injects chained value into the first argument (no need to write `x -> λ(x, y)`)
+- given function call, injects chained value into the first argument (no need to write `val |> x -> λ(x, val2)`)
 
 ```julia
 julia> val |> x -> λ(x) == @> val |> λ()

@@ -8,15 +8,15 @@ Lets you abuse `|>` and may make you `|>` addict.
 
 ## Examples
 
-With `@>` macro, you no longer need to write the boring `val |> x -> func(val, x)`.
+With `@>` macro, you no longer need to write the boring `val |> x -> λ(x, val2)`
 
-- compatible with usual [`|>`](@ref) operations
+- compatible with usual `|>` operations
 
 ```julia
 julia> λ(val) == val |> λ == @> val |> λ
 ```
 
-- given function call, injects chained value into the first argument (no need to write `x -> λ(x, y)`)
+- given function call, injects chained value into the first argument (no need to write `val |> x -> λ(x, val2)`)
 
 ```julia
 julia> val |> x -> λ(x) == @> val |> λ()
@@ -84,7 +84,8 @@ julia> (ary .|> string .|> x -> λ(val, x)) == @.>> ary string (2, λ(val))
 
 ## Random TODOs
 
-- [x] Support `.|>` fusing
+- [x] support `.|>` fusing
+- [x] update documents
 
 ## License
 
