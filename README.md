@@ -6,91 +6,79 @@
 Lets you abuse `|>` and may make you `|>` addict.
 
 
-## Example
+## Examples
 
 With `@>` macro, you no longer need to write the boring `val |> x -> func(val, x)`.
 
+- compatible with usual [`|>`](@ref) operations
+
 ```julia
-julia> function λ(arg, default = "default"; keyword = "default")
-           arg, default, keyword
-       end
-λ (generic function with 2 methods)
-
-# usual function chaining operation
-julia> @> "chanined" |> λ
-("chanined", "default", "default")
-
-# given function call, injects chained value into the first argument
-julia> @> "chained" |> λ()
-("chained", "default", "default")
-
-julia> @> "chained" |> λ("passed")
-("chained", "passed", "default")
-
-# with tuple, the argument position can be specified
-julia> @> "chained" |> (1, λ())
-("chained", "default", "default")
-
-julia> @> "chained" |> (2, λ("passsed"))
-("passed", "chained", "default")
-
-# keyword argument should be specified with symbol
-julia> @> "chanined" |> (:keyword, λ("passed"))
-("passed", "default", "chained")
-
-# dot-fusing is fully supported
-julia> @> 1:100 .|> string .|> λ("passed")
-100-element Array{Tuple{String,String,String},1}:
- ("1", "passed", "default")
- ("2", "passed", "default")
- ("3", "passed", "default")
- ("4", "passed", "default")
- ("5", "passed", "default")
- ⋮
- ("97", "passed", "default")
- ("98", "passed", "default")
- ("99", "passed", "default")
- ("100", "passed", "default")
+julia> λ(val) == val |> λ == @> val |> λ
 ```
+
+- given function call, injects chained value into the first argument (no need to write `x -> λ(x, y)`)
+
+```julia
+julia> val |> x -> λ(x) == @> val |> λ()
+julia> val |> x -> λ(x, val2) == @> val |> λ(val2)
+julia> val |> x -> λ(x, val2) |> x -> λ2(x, val3) == @> val |> λ(val2) |> λ2(val3)
+```
+
+- using tuple, the argument position can be specified
+
+```julia
+julia> val |> x -> λ(x) == @> val |> (1, λ())
+julia> val |> x -> λ(val2, x) == @> val |> (2, λ(val2))
+julia> val |> x -> λ(val2, x) |> x -> λ2(x, val3) == @> val |> (2, λ(val2)) |> λ2(val3)
+```
+
+- keyword argument should be specified with symbol
+
+```julia
+julia> val |> x -> λ(val2; keyword = x) == @> val |> (:keyword, λ(val2))
+julia> val |> x -> λ(val2; keyword = x) |> x -> λ2(val3; keyword2 = x) == @> val |> (:keyword, λ(val2)) |> (:keyword2, λ2(val3))
+```
+
+- [dot-fusing](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1) is fully supported
+
+```julia
+julia> (ary .|> string .|> x -> λ(x, val)) == @> ary .|> string .|> λ(val)
+```
+
+***
 
 With `@>>` macro, you no longer need even `|>` operators themselves.
+> Equivalent to the examples of `@>`
 
 ```julia
-julia> function λ(arg, default = "default"; keyword = "default")
-           arg, default, keyword
-       end
-λ (generic function with 2 methods)
-
-julia> @>> "chained" λ()
-("chained", "default", "default")
-
-julia> @>> "chained" (2, λ("passsed"))
-("passed", "chained", "default")
-
-julia> @>> "chanined" (:keyword, λ("passed"))
-("passed", "default", "chained")
+julia> λ(val) == val |> λ == @>> val λ
 ```
 
-Within `@.>>` macro, all the implicit `|>` operations are [dot-fused](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1).
+```julia
+julia> val |> x -> λ(x) == @>> val λ()
+julia> val |> x -> λ(x, val2) == @>> val λ(val2)
+julia> val |> x -> λ(x, val2) |> x -> λ2(x, val3) == @>> val λ(val2) λ2(val3)
+```
 
 ```julia
-julia> function λ(arg, default = "default"; keyword = "default")
-           arg, default, keyword
-       end
-λ (generic function with 2 methods)
+julia> val |> x -> λ(x) == @>> val (1, λ())
+julia> val |> x -> λ(val2, x) == @>> val (2, λ(val2))
+julia> val |> x -> λ(val2, x) |> x -> λ2(x, val3) == @>> val (2, λ(val2)) λ2(val3)
+```
 
-julia> @.>> 1:100 string (2, λ("passed"))
-100-element Array{Tuple{String,String,String},1}:
- ("passed", "1", "default")
- ("passed", "2", "default")
- ("passed", "3", "default")
- ("passed", "4", "default")
- ("passed", "5", "default")
- ⋮
- ("passed", "97", "default")
- ("passed", "98", "default")
- ("passed", "99", "default")
- ("passed", "100", "default")
+```julia
+julia> val |> x -> λ(val2; keyword = x) == @>> val (:keyword, λ(val2))
+julia> val |> x -> λ(val2; keyword = x) |> x -> λ2(val3; keyword2 = x) == @>> val (:keyword, λ(val2)) (:keyword2, λ2(val3))
+```
+
+***
+
+With `@.>>` macro, all the implicit `|>` operations are [dot-fused](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized-1).
+
+> Equivalent to the last example of `@>`
+
+```julia
+julia> (ary .|> string .|> x -> λ(val, x)) == @.>> ary string (2, λ(val))
 ```
 
 
